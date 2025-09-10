@@ -7,6 +7,7 @@ import { Agent, createNewAgent } from '@/lib/presets/agents';
 import { useAgent, useUI, useUser } from '@/lib/state';
 import c from 'classnames';
 import { useEffect, useState } from 'react';
+import Portrait from './Portrait';
 
 export default function Header() {
   const { showUserConfig, setShowUserConfig, setShowAgentEdit } = useUI();
@@ -44,6 +45,11 @@ export default function Header() {
             }}
           >
             <h1 className={c({ active: showRoomList })}>
+              <Portrait
+                appearance={current.appearance}
+                color={current.bodyColor}
+                size={32}
+              />
               {current.name}
               <span className="icon">arrow_drop_down</span>
             </h1>
@@ -69,6 +75,11 @@ export default function Header() {
                     className={c({ active: agent.id === current.id })}
                   >
                     <button onClick={() => changeAgent(agent)}>
+                      <Portrait
+                        appearance={agent.appearance}
+                        color={agent.bodyColor}
+                        size={40}
+                      />
                       {agent.name}
                     </button>
                   </li>
@@ -81,9 +92,19 @@ export default function Header() {
             {
               <ul>
                 {availablePersonal.length ? (
-                  availablePersonal.map(({ id, name }) => (
-                    <li key={name} className={c({ active: id === current.id })}>
-                      <button onClick={() => changeAgent(id)}>{name}</button>
+                  availablePersonal.map(agent => (
+                    <li
+                      key={agent.name}
+                      className={c({ active: agent.id === current.id })}
+                    >
+                      <button onClick={() => changeAgent(agent.id)}>
+                        <Portrait
+                          appearance={agent.appearance}
+                          color={agent.bodyColor}
+                          size={40}
+                        />
+                        {agent.name}
+                      </button>
                     </li>
                   ))
                 ) : (
@@ -106,7 +127,7 @@ export default function Header() {
         className="userSettingsButton"
         onClick={() => setShowUserConfig(!showUserConfig)}
       >
-        <p className='user-name'>{name || 'Tu nombre'}</p>
+        <p className="user-name">{name || 'Tu nombre'}</p>
         <span className="icon">tune</span>
       </button>
     </header>

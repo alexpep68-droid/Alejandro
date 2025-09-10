@@ -782,23 +782,69 @@ input[type='range'] {
   gap: 30px;
 }
 
+.editAgent > div:nth-child(2) > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.editAgent > div:nth-child(2) > div > label {
+  color: var(--gray-300);
+  font-size: 16px;
+}
+
+.colorPicker,
+.appearancePicker {
+  justify-content: center;
+}
+
+.appearancePicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0;
+}
+
+.appearancePicker li {
+  list-style: none;
+}
+
+.appearance-button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: var(--Neutral-20);
+  color: var(--Neutral-80);
+  transition: all 0.2s ease-in-out;
+  text-transform: capitalize;
+}
+
+.appearance-button:hover {
+  background-color: var(--Neutral-30);
+}
+
+.appearance-button.active {
+  background-color: var(--Blue-500);
+  color: white;
+}
+
 .agentPreview {
   width: 280px;
   height: 280px;
-  background: var(--Neutral-00);
+  background: var(--Neutral-10);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 100%;
   pointer-events: none;
   position: relative;
+  margin-bottom: 20px;
 }
 
-.agentPreview .agent {
-  position: static;
-  left: unset;
-  top: unset;
-  translate: 0 0 !important;
+.agent-portrait {
+  border-radius: 100%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 .voicePicker {
@@ -848,6 +894,7 @@ input[type='range'] {
   opacity: 0.5;
   transition: all 0.2s;
   text-align: left;
+  gap: 10px;
 }
 
 .roomInfo h1:hover,
@@ -945,6 +992,11 @@ input[type='range'] {
   color: var(--gray-500);
   transition: all 0.2s;
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 20px;
+  padding: 5px 0;
 }
 
 .roomList li.active button,

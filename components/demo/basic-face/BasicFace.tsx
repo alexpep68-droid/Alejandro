@@ -10,6 +10,7 @@ import useFace from '../../../hooks/demo/use-face';
 import useHover from '../../../hooks/demo/use-hover';
 import useTilt from '../../../hooks/demo/use-tilt';
 import { useLiveAPIContext } from '../../../contexts/LiveAPIContext';
+import { APPEARANCE } from '@/lib/presets/agents';
 
 // Minimum volume level that indicates audio output is occurring
 const AUDIO_OUTPUT_DETECTION_THRESHOLD = 0.05;
@@ -24,12 +25,15 @@ type BasicFaceProps = {
   radius?: number;
   /** The color of the face. */
   color?: string;
+  /** The appearance style of the face. */
+  appearance?: APPEARANCE;
 };
 
 export default function BasicFace({
   canvasRef,
   radius = 250,
   color,
+  appearance = 'default',
 }: BasicFaceProps) {
   const timeoutRef = useRef<number | null>(null);
 
@@ -42,7 +46,7 @@ export default function BasicFace({
   const [scale, setScale] = useState(0.1);
 
   // Face state
-  const { eyeScale, mouthScale } = useFace();
+  const { eyeLeftScale, eyeRightScale, mouthScale } = useFace(appearance);
   const hoverPosition = useHover();
   const tiltAngle = useTilt({
     maxAngle: 5,
@@ -76,8 +80,24 @@ export default function BasicFace({
   // Render the face on the canvas
   useEffect(() => {
     const ctx = canvasRef.current?.getContext('2d')!;
-    renderBasicFace({ ctx, mouthScale, eyeScale, color });
-  }, [canvasRef, volume, eyeScale, mouthScale, color, scale]);
+    renderBasicFace({
+      ctx,
+      mouthScale,
+      eyeLeftScale,
+      eyeRightScale,
+      color,
+      appearance,
+    });
+  }, [
+    canvasRef,
+    volume,
+    eyeLeftScale,
+    eyeRightScale,
+    mouthScale,
+    color,
+    appearance,
+    scale,
+  ]);
 
   return (
     <canvas

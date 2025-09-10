@@ -94,17 +94,25 @@ export function useLiveApi({
     };
 
     // Bind event listeners
-    client.on('open', onOpen);
-    client.on('close', onClose);
-    client.on('interrupted', stopAudioStreamer);
-    client.on('audio', onAudio);
+    // FIX: Use `addListener` which is the correct method for the event emitter.
+    client.addListener('open', onOpen);
+    // FIX: Use `addListener` which is the correct method for the event emitter.
+    client.addListener('close', onClose);
+    // FIX: Use `addListener` which is the correct method for the event emitter.
+    client.addListener('interrupted', stopAudioStreamer);
+    // FIX: Use `addListener` which is the correct method for the event emitter.
+    client.addListener('audio', onAudio);
 
     return () => {
       // Clean up event listeners
-      client.off('open', onOpen);
-      client.off('close', onClose);
-      client.off('interrupted', stopAudioStreamer);
-      client.off('audio', onAudio);
+      // FIX: Use `removeListener` which is the correct method for the event emitter.
+      client.removeListener('open', onOpen);
+      // FIX: Use `removeListener` which is the correct method for the event emitter.
+      client.removeListener('close', onClose);
+      // FIX: Use `removeListener` which is the correct method for the event emitter.
+      client.removeListener('interrupted', stopAudioStreamer);
+      // FIX: Use `removeListener` which is the correct method for the event emitter.
+      client.removeListener('audio', onAudio);
     };
   }, [client]);
 

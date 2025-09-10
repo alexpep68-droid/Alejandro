@@ -1,5 +1,5 @@
 {
-  "name": "Copy of ChatterBots",
+  "name": "ChatterBots",
   "description": "Una herramienta interactiva que te permite diseñar, probar y bromear con personajes de IA personalizados sobre la marcha.",
   "requestFramePermissions": [
     "microphone"

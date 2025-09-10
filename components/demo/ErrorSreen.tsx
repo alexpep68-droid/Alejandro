@@ -21,10 +21,12 @@ export default function ErrorScreen() {
       setError(error);
     }
 
-    client.on('error', onError);
+    // FIX: Use `addListener` which is the correct method for the event emitter.
+    client.addListener('error', onError);
 
     return () => {
-      client.off('error', onError);
+      // FIX: Use `removeListener` which is the correct method for the event emitter.
+      client.removeListener('error', onError);
     };
   }, [client]);
 

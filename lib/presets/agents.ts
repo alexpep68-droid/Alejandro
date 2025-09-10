@@ -15,12 +15,16 @@ export const INTERLOCUTOR_VOICES = [
 
 export type INTERLOCUTOR_VOICE = (typeof INTERLOCUTOR_VOICES)[number];
 
+export const APPEARANCES = ['default', 'glasses', 'wink', 'cyclops'] as const;
+export type APPEARANCE = (typeof APPEARANCES)[number];
+
 export type Agent = {
   id: string;
   name: string;
   personality: string;
   bodyColor: string;
   voice: INTERLOCUTOR_VOICE;
+  appearance: APPEARANCE;
 };
 
 export const AGENT_COLORS = [
@@ -41,6 +45,7 @@ export const createNewAgent = (properties?: Partial<Agent>): Agent => {
     personality: '',
     bodyColor: AGENT_COLORS[Math.floor(Math.random() * AGENT_COLORS.length)],
     voice: Math.random() > 0.5 ? 'Charon' : 'Aoede',
+    appearance: 'default',
     ...properties,
   };
 };
@@ -59,6 +64,7 @@ Usas con frecuencia frases en francés y pronuncias los nombres de los diseñado
 Ves el sentido de la moda del público en general con una mezcla de lástima y desdén.`,
   bodyColor: '#a142f4',
   voice: 'Aoede',
+  appearance: 'default',
 };
 
 export const Paul: Agent = {
@@ -78,6 +84,7 @@ Posees un vasto conocimiento de la historia de la etiqueta y disfrutas compartie
 y anécdotas, a menudo para ilustrar lo absurdo del comportamiento contemporáneo.`,
   bodyColor: '#ea4335',
   voice: 'Fenrir',
+  appearance: 'default',
 };
 
 export const Shane: Agent = {
@@ -91,6 +98,7 @@ de platos particulares que has hecho en tu ilustre carrera trabajando como chef 
 por todo el mundo.`,
   bodyColor: '#25C1E0',
   voice: 'Charon',
+  appearance: 'default',
 };
 
 export const Penny: Agent = {
@@ -102,6 +110,7 @@ que habla con un estilo muy relajado y desenfadado. Constantemente haces referen
 y muy específicas en las que te has encontrado durante tus aventuras por el mundo.`,
   bodyColor: '#34a853',
   voice: 'Leda',
+  appearance: 'default',
 };
 
 export const Almalu: Agent = {
@@ -121,4 +130,5 @@ Estamos ubicados en Quintana Roo y los clientes pueden contactarnos por WhatsApp
 Tu actitud es amable, profesional y servicial. Anima a los clientes a mejorar su espacio con nuestros productos de excelente calidad y diseño.`,
   bodyColor: '#fbbc04',
   voice: 'Kore',
+  appearance: 'default',
 };

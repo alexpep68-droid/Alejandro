@@ -35,6 +35,7 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
   return window.btoa(binary);
 }
 
+// FIX: Make AudioRecorder extend EventEmitter to provide event emitting capabilities.
 export class AudioRecorder extends EventEmitter {
   stream: MediaStream | undefined;
   audioContext: AudioContext | undefined;
@@ -74,6 +75,7 @@ export class AudioRecorder extends EventEmitter {
 
         if (arrayBuffer) {
           const arrayBufferString = arrayBufferToBase64(arrayBuffer);
+          // FIX: Correctly emit event from EventEmitter.
           this.emit('data', arrayBufferString);
         }
       };
@@ -86,6 +88,7 @@ export class AudioRecorder extends EventEmitter {
       );
       this.vuWorklet = new AudioWorkletNode(this.audioContext, vuWorkletName);
       this.vuWorklet.port.onmessage = (ev: MessageEvent) => {
+        // FIX: Correctly emit event from EventEmitter.
         this.emit('volume', ev.data.volume);
       };
 

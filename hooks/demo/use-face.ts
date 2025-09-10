@@ -4,10 +4,13 @@
 */
 import { useEffect, useRef, useState } from 'react';
 import { useLiveAPIContext } from '../../contexts/LiveAPIContext';
+import { APPEARANCE } from '@/lib/presets/agents';
 
 export type FaceResults = {
-  /** A value that represents how open the eyes are. */
-  eyesScale: number;
+  /** A value that represents how open the left eye is. */
+  eyeLeftScale: number;
+  /** A value that represents how open the right eye is. */
+  eyeRightScale: number;
   /** A value that represents how open the mouth is. */
   mouthScale: number;
 };
@@ -57,10 +60,12 @@ function smoothstep(edge0: number, edge1: number, x: number) {
 
 type BlinkProps = {
   speed: number;
+  appearance: APPEARANCE;
 };
 
-export function useBlink({ speed }: BlinkProps) {
-  const [eyeScale, setEyeScale] = useState(1);
+export function useBlink({ speed, appearance }: BlinkProps) {
+  const [eyeLeftScale, setEyeLeftScale] = useState(1);
+  const [eyeRightScale, setEyeRightScale] = useState(1);
   const [frame, setFrame] = useState(0);
 
   const frameId = useRef(-1);
@@ -72,7 +77,30 @@ export function useBlink({ speed }: BlinkProps) {
         let s = easeOutQuint((Math.sin(frame * speed) + 1) * 2);
         s = smoothstep(0.1, 0.25, s);
         s = Math.min(1, s);
-        setEyeScale(s);
+
+        if (appearance === 'wink') {
+          const period = (2 * Math.PI) / speed;
+          // Wink for one period, then rest for one period
+          const cycleDurationFrames = 2 * period;
+
+          if (frame % cycleDurationFrames < period) {
+            // Determine which eye to wink based on cycle number
+            if (Math.floor(frame / cycleDurationFrames) % 2 === 0) {
+              setEyeLeftScale(s);
+              setEyeRightScale(1);
+            } else {
+              setEyeLeftScale(1);
+              setEyeRightScale(s);
+            }
+          } else {
+            // Rest period
+            setEyeLeftScale(1);
+            setEyeRightScale(1);
+          }
+        } else {
+          setEyeLeftScale(s);
+          setEyeRightScale(s);
+        }
         nextFrame();
       });
     }
@@ -82,14 +110,17 @@ export function useBlink({ speed }: BlinkProps) {
     return () => {
       window.cancelAnimationFrame(frameId.current);
     };
-  }, [speed, eyeScale, frame]);
+  }, [speed, appearance, frame]);
 
-  return eyeScale;
+  return { eyeLeftScale, eyeRightScale };
 }
 
-export default function useFace() {
+export default function useFace(appearance: APPEARANCE) {
   const { volume } = useLiveAPIContext();
-  const eyeScale = useBlink({ speed: 0.0125 });
+  const { eyeLeftScale, eyeRightScale } = useBlink({
+    speed: 0.0125,
+    appearance,
+  });
 
-  return { eyeScale, mouthScale: volume / 2 };
+  return { eyeLeftScale, eyeRightScale, mouthScale: volume / 2 };
 }

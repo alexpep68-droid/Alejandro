@@ -67,16 +67,20 @@ function ControlTray({ children }: ControlTrayProps) {
     };
 
     if (connected && !muted && audioRecorder) {
-      audioRecorder.on('data', onData);
-      audioRecorder.on('volume', onVolume);
+      // FIX: Use `addListener` which is the correct method for the event emitter.
+      audioRecorder.addListener('data', onData);
+      // FIX: Use `addListener` which is the correct method for the event emitter.
+      audioRecorder.addListener('volume', onVolume);
       audioRecorder.start();
     } else {
       audioRecorder.stop();
       setMicVolume(0);
     }
     return () => {
-      audioRecorder.off('data', onData);
-      audioRecorder.off('volume', onVolume);
+      // FIX: Use `removeListener` which is the correct method for the event emitter.
+      audioRecorder.removeListener('data', onData);
+      // FIX: Use `removeListener` which is the correct method for the event emitter.
+      audioRecorder.removeListener('volume', onVolume);
     };
   }, [connected, client, muted, audioRecorder]);
 

@@ -6,12 +6,15 @@ import { useRef } from 'react';
 import {
   Agent,
   AGENT_COLORS,
+  APPEARANCES,
+  APPEARANCE,
   INTERLOCUTOR_VOICE,
   INTERLOCUTOR_VOICES,
 } from '@/lib/presets/agents';
 import Modal from './Modal';
 import c from 'classnames';
 import { useAgent, useUI } from '@/lib/state';
+import Portrait from './Portrait';
 
 export default function EditAgent() {
   const agent = useAgent(state => state.current);
@@ -25,6 +28,12 @@ export default function EditAgent() {
 
   function updateCurrentAgent(adjustments: Partial<Agent>) {
     updateAgent(agent.id, adjustments);
+  }
+
+  function toTitleCase(str: string) {
+    return str.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
   }
 
   return (
@@ -60,7 +69,15 @@ export default function EditAgent() {
         </div>
 
         <div>
+          <div className="agentPreview">
+            <Portrait
+              appearance={agent.appearance}
+              color={agent.bodyColor}
+              size={200}
+            />
+          </div>
           <div>
+            <label>Color</label>
             <ul className="colorPicker">
               {AGENT_COLORS.map((color, i) => (
                 <li
@@ -71,6 +88,27 @@ export default function EditAgent() {
                     style={{ backgroundColor: color }}
                     onClick={() => updateCurrentAgent({ bodyColor: color })}
                   />
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <label>Apariencia</label>
+            <ul className="appearancePicker">
+              {APPEARANCES.map(appearance => (
+                <li key={appearance}>
+                  <button
+                    className={c('appearance-button', {
+                      active: appearance === agent.appearance,
+                    })}
+                    onClick={() =>
+                      updateCurrentAgent({
+                        appearance: appearance as APPEARANCE,
+                      })
+                    }
+                  >
+                    {toTitleCase(appearance)}
+                  </button>
                 </li>
               ))}
             </ul>

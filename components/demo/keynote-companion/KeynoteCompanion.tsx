@@ -52,7 +52,11 @@ export default function KeynoteCompanion() {
 
   return (
     <div className="keynote-companion">
-      <BasicFace canvasRef={faceCanvasRef!} color={current.bodyColor} />
+      <BasicFace
+        canvasRef={faceCanvasRef!}
+        color={current.bodyColor}
+        appearance={current.appearance}
+      />
     </div>
   );
 }

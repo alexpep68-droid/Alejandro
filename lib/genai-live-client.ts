@@ -67,6 +67,7 @@ export interface LiveClientEventTypes {
   turncomplete: () => void;
 }
 
+// FIX: Make GenAILiveClient extend EventEmitter to provide event emitting capabilities.
 export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
   public readonly model: string = DEFAULT_LIVE_API_MODEL;
 
@@ -135,6 +136,7 @@ export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
 
   public send(parts: Part | Part[], turnComplete: boolean = true) {
     if (this._status !== 'connected' || !this.session) {
+      // FIX: Correctly emit event from EventEmitter.
       this.emit('error', new ErrorEvent('El cliente no está conectado'));
       return;
     }
@@ -144,6 +146,7 @@ export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
 
   public sendRealtimeInput(chunks: Array<{ mimeType: string; data: string }>) {
     if (this._status !== 'connected' || !this.session) {
+      // FIX: Correctly emit event from EventEmitter.
       this.emit('error', new ErrorEvent('El cliente no está conectado'));
       return;
     }
@@ -169,6 +172,7 @@ export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
 
   public sendToolResponse(toolResponse: LiveClientToolResponse) {
     if (this._status !== 'connected' || !this.session) {
+      // FIX: Correctly emit event from EventEmitter.
       this.emit('error', new ErrorEvent('El cliente no está conectado'));
       return;
     }
@@ -186,16 +190,19 @@ export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
 
   protected onMessage(message: LiveServerMessage) {
     if (message.setupComplete) {
+      // FIX: Correctly emit event from EventEmitter.
       this.emit('setupcomplete');
       return;
     }
     if (message.toolCall) {
       this.log('server.toolCall', message);
+      // FIX: Correctly emit event from EventEmitter.
       this.emit('toolcall', message.toolCall);
       return;
     }
     if (message.toolCallCancellation) {
       this.log('receive.toolCallCancellation', message);
+      // FIX: Correctly emit event from EventEmitter.
       this.emit('toolcallcancellation', message.toolCallCancellation);
       return;
     }
@@ -204,11 +211,13 @@ export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
       const { serverContent } = message;
       if ('interrupted' in serverContent) {
         this.log('receive.serverContent', 'interrumpido');
+        // FIX: Correctly emit event from EventEmitter.
         this.emit('interrupted');
         return;
       }
       if ('turnComplete' in serverContent) {
         this.log('server.send', 'turno completo');
+        // FIX: Correctly emit event from EventEmitter.
         this.emit('turncomplete');
       }
 
@@ -224,6 +233,7 @@ export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
         base64s.forEach(b64 => {
           if (b64) {
             const data = base64ToArrayBuffer(b64);
+            // FIX: Correctly emit event from EventEmitter.
             this.emit('audio', data);
             this.log(`server.audio`, `búfer (${data.byteLength})`);
           }
@@ -235,6 +245,7 @@ export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
         parts = otherParts;
 
         const content: LiveServerContent = { modelTurn: { parts } };
+        // FIX: Correctly emit event from EventEmitter.
         this.emit('content', content);
         this.log(`server.content`, message);
       } else {
@@ -249,11 +260,13 @@ export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
 
     const message = `No se pudo conectar a GenAI Live: ${e.message}`;
     this.log(`server.${e.type}`, message);
+    // FIX: Correctly emit event from EventEmitter.
     this.emit('error', e);
   }
 
   protected onOpen() {
     this._status = 'connected';
+    // FIX: Correctly emit event from EventEmitter.
     this.emit('open');
   }
 
@@ -272,6 +285,7 @@ export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
       `server.${e.type}`,
       `desconectado ${reason ? `con motivo: ${reason}` : ``}`
     );
+    // FIX: Correctly emit event from EventEmitter.
     this.emit('close', e);
   }
 
@@ -281,6 +295,7 @@ export class GenAILiveClient extends EventEmitter<LiveClientEventTypes> {
    * @param message - Log message
    */
   protected log(type: string, message: string | object) {
+    // FIX: Correctly emit event from EventEmitter.
     this.emit('log', {
       type,
       message,
